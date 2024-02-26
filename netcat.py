@@ -10,8 +10,15 @@ def execute(cmd):
     cmd = cmd.strip()
     if not cmd:
         return
-    output = subprocess.check_output(shlex.split(cmd), stderr=subprocess.STDOUT) # check_output() runs a command on the local operating system and returns the output as a byte string. 
-    return output.decode()
+    # output = subprocess.check_output(shlex.split(cmd), stderr=subprocess.STDOUT) # check_output() runs a command on the local operating system and returns the output as a byte string. 
+    # return output.decode()
+    try:
+        # Run the command in a shell and return its output
+        output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+        return output.decode()
+    except subprocess.CalledProcessError as e:
+        # Return error output if the command fails
+        return e.output.decode()
 
 class NetCat:
     def __init__(self, args, buffer=None):
